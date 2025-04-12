@@ -1,0 +1,36 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="db_config_sf" class="com.sasibhumaraju.config.DataBaseConfig" />
+
+    <bean id="coffee" class="com.sasibhumaraju.model.Coffee" scope="prototype"/>
+    <bean id="order" class="com.sasibhumaraju.model.CoffeeOrder" scope="prototype">
+            <property name="status" value="PLACED" />
+    </bean>
+
+    <bean id="new_user" class="com.sasibhumaraju.model.AppUser" scope="prototype"/>
+
+    <bean id="coffee_dao" class="com.sasibhumaraju.DAO.CoffeeDAO" scope="singleton">
+        <constructor-arg ref="db_config_sf"/>
+    </bean>
+    <bean id="user_dao" class="com.sasibhumaraju.DAO.UserDAO" scope="singleton">
+        <constructor-arg ref="db_config_sf"/>
+    </bean>
+    <bean id="order_dao" class="com.sasibhumaraju.DAO.CoffeeOrderDAO" scope="singleton">
+        <constructor-arg index="0" ref="db_config_sf"/>
+        <constructor-arg index="1" ref="user_dao"/>
+    </bean>
+
+    <bean id="app_user_service" class="com.sasibhumaraju.service.AppUserService">
+        <constructor-arg ref="user_dao"/>
+        <constructor-arg ref="coffee_dao"/>
+        <constructor-arg ref="order_dao"/>
+    </bean>
+
+    <bean id="auth_service" class="com.sasibhumaraju.service.AuthService">
+        <constructor-arg ref="user_dao"/>
+    </bean>
+
+</beans>
